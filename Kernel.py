@@ -595,7 +595,7 @@ class Kernel:
         response = ""
         for e in elem[2:]:
             response += self._processElement(e, sessionID)
-        return string.capwords(response)
+        return response.capwords()
 
     # <gender>
     def _processGender(self, elem, sessionID):
@@ -734,7 +734,7 @@ class Kernel:
         response = ""
         for e in elem[2:]:
             response += self._processElement(e, sessionID)
-        return string.lower(response)
+        return response.lower()
 
     # <person>
     def _processPerson(self, elem, sessionID):
@@ -812,9 +812,9 @@ class Kernel:
             response += self._processElement(e, sessionID)
         try:
             response = response.strip()
-            words = string.split(response, " ", 1)
-            words[0] = string.capitalize(words[0])
-            response = string.join(words)
+            words = response.split(" ", 1)
+            words[0] = words[0].capitalize()
+            response = " ".join(words)
             return response
         except IndexError:  # response was empty
             return ""
@@ -946,7 +946,7 @@ class Kernel:
         time.sleep(0.01)  # I'm told this works around a potential IOError exception.
         for line in out:
             response += line + "\n"
-        response = string.join(response.splitlines()).strip()
+        response = " ".join(response.splitlines()).strip()
         return response
 
     # <template>
@@ -984,7 +984,7 @@ class Kernel:
         # space.  To improve performance, we do this only once for each
         # text element encountered, and save the results for the future.
         if elem[1]["xml:space"] == "default":
-            elem[2] = re.sub("\s+", " ", elem[2])
+            elem[2] = re.sub("\\s+", " ", elem[2])
             elem[1]["xml:space"] = "preserve"
         return elem[2]
 
@@ -1108,7 +1108,7 @@ class Kernel:
         response = ""
         for e in elem[2:]:
             response += self._processElement(e, sessionID)
-        return string.upper(response)
+        return response.upper()
 
     # <version>
     def _processVersion(self, elem, sessionID):

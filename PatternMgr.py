@@ -23,9 +23,9 @@ class PatternMgr:
         self._root = {}
         self._templateCount = 0
         self._botName = "Nameless"
-        punctuation = "\"`~!@#$%^&*()-_=+[{]}\|;:',<.>/?"
+        punctuation = "\"`~!@#$%^&*()-_=+[{]}\\|;:',<.>/?"
         self._puncStripRE = re.compile("[" + re.escape(punctuation) + "]")
-        self._whitespaceRE = re.compile("\s+", re.LOCALE | re.UNICODE)
+        self._whitespaceRE = re.compile("\\s+")
 
     def numTemplates(self):
         """Return the number of templates currently stored."""
@@ -37,7 +37,7 @@ class PatternMgr:
 
         """
         # Collapse a multi-word name into a single word
-        self._botName = str(string.join(name.split()))
+        self._botName = str("".join(name.split()))
 
     def dump(self):
         """Print_ all learned patterns, for debugging purposes."""
@@ -77,7 +77,7 @@ class PatternMgr:
         """
         (pattern, that, topic) = xxx_todo_changeme
         node = self._root
-        for word in string.split(pattern):
+        for word in pattern.split():
             key = word
             if key == "_":
                 key = self._UNDERSCORE
@@ -94,7 +94,7 @@ class PatternMgr:
             if self._THAT not in node:
                 node[self._THAT] = {}
             node = node[self._THAT]
-            for word in string.split(that):
+            for word in that.split():
                 key = word
                 if key == "_":
                     key = self._UNDERSCORE
@@ -109,7 +109,7 @@ class PatternMgr:
             if self._TOPIC not in node:
                 node[self._TOPIC] = {}
             node = node[self._TOPIC]
-            for word in string.split(topic):
+            for word in topic.split():
                 key = word
                 if key == "_":
                     key = self._UNDERSCORE
@@ -136,16 +136,16 @@ class PatternMgr:
             return None
         # Mutilate the input.  Remove all punctuation and convert the
         # text to all caps.
-        input = string.upper(pattern)
+        input = pattern.upper()
         input = re.sub(self._puncStripRE, " ", input)
         if that.strip() == "":
             that = "ULTRABOGUSDUMMYTHAT"  # 'that' must never be empty
-        thatInput = string.upper(that)
+        thatInput = that.upper()
         thatInput = re.sub(self._puncStripRE, " ", thatInput)
         thatInput = re.sub(self._whitespaceRE, " ", thatInput)
         if topic.strip() == "":
             topic = "ULTRABOGUSDUMMYTOPIC"  # 'topic' must never be empty
-        topicInput = string.upper(topic)
+        topicInput = topic.upper()
         topicInput = re.sub(self._puncStripRE, " ", topicInput)
 
         # Pass the input off to the recursive call
@@ -165,17 +165,17 @@ class PatternMgr:
         """
         # Mutilate the input.  Remove all punctuation and convert the
         # text to all caps.
-        input = string.upper(pattern)
+        input = pattern.upper()
         input = re.sub(self._puncStripRE, " ", input)
         input = re.sub(self._whitespaceRE, " ", input)
         if that.strip() == "":
             that = "ULTRABOGUSDUMMYTHAT"  # 'that' must never be empty
-        thatInput = string.upper(that)
+        thatInput = that.upper()
         thatInput = re.sub(self._puncStripRE, " ", thatInput)
         thatInput = re.sub(self._whitespaceRE, " ", thatInput)
         if topic.strip() == "":
             topic = "ULTRABOGUSDUMMYTOPIC"  # 'topic' must never be empty
-        topicInput = string.upper(topic)
+        topicInput = topic.upper()
         topicInput = re.sub(self._puncStripRE, " ", topicInput)
         topicInput = re.sub(self._whitespaceRE, " ", topicInput)
 
@@ -244,13 +244,13 @@ class PatternMgr:
 
         # extract the star words from the original, unmutilated input.
         if foundTheRightStar:
-            # print_ string.join(pattern.split()[start:end+1])
+            # print_ " ".join(pattern.split()[start:end+1])
             if starType == 'star':
-                return string.join(pattern.split()[start:end + 1])
+                return " ".join(pattern.split()[start:end + 1])
             elif starType == 'thatstar':
-                return string.join(that.split()[start:end + 1])
+                return " ".join(that.split()[start:end + 1])
             elif starType == 'topicstar':
-                return string.join(topic.split()[start:end + 1])
+                return " ".join(topic.split()[start:end + 1])
         else:
             return ""
 
