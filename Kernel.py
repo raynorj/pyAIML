@@ -362,10 +362,8 @@ class Kernel:
 
         # release the lock and return
         self._respondLock.release()
-        try:
-            return finalResponse.encode(self._textEncoding)
-        except UnicodeError:
-            return finalResponse
+
+        return finalResponse
 
     # This version of _respond() just fetches the response for some input.
     # It does not mess with the input and output histories.  Recursive calls
@@ -380,8 +378,7 @@ class Kernel:
         inputStack = self.getPredicate(self._inputStack, sessionID)
         if len(inputStack) > self._maxRecursionDepth:
             if self._verboseMode:
-                err = "WARNING: maximum recursion depth exceeded (input='%s')" % input.encode(
-                    self._textEncoding, 'replace')
+                err = "WARNING: maximum recursion depth exceeded (input='%s')" % input
                 sys.stderr.write(err)
             return ""
 
@@ -411,7 +408,7 @@ class Kernel:
         elem = self._brain.match(subbedInput, subbedThat, subbedTopic)
         if elem is None:
             if self._verboseMode:
-                err = "WARNING: No match found for input: %s\n" % input.encode(self._textEncoding)
+                err = "WARNING: No match found for input: %s\n" % input
                 sys.stderr.write(err)
         else:
             # Process the element into a response string.
@@ -443,8 +440,7 @@ class Kernel:
             # Oops -- there's no handler function for this element
             # type!
             if self._verboseMode:
-                err = "WARNING: No handler found for <%s> element\n" % elem[0].encode(
-                    self._textEncoding, 'replace')
+                err = "WARNING: No handler found for <%s> element\n" % elem[0]
                 sys.stderr.write(err)
             return ""
         return handlerFunc(elem, sessionID)
@@ -939,8 +935,7 @@ class Kernel:
             out = os.popen(command)
         except RuntimeError as msg:
             if self._verboseMode:
-                err = "WARNING: RuntimeError while processing \"system\" element:\n%s\n" % msg.encode(
-                    self._textEncoding, 'replace')
+                err = "WARNING: RuntimeError while processing \"system\" element:\n%s\n" % msg
                 sys.stderr.write(err)
             return "There was an error while computing my response.  Please inform my botmaster."
         time.sleep(0.01)  # I'm told this works around a potential IOError exception.
@@ -1138,7 +1133,7 @@ def _testTag(kern, tag, input, outputList):
         _numPassed += 1
         return True
     else:
-        print_("FAILED (response: '%s')" % response.encode(kern._textEncoding, 'replace'))
+        print_("FAILED (response: '%s')" % response)
         return False
 
 
